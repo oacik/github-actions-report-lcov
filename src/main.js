@@ -42,14 +42,6 @@ async function run() {
         body += `\n:no_entry: ${errorMessage}`;
       }
 
-      const updateGitHubComment = commentId =>
-      octokit.issues.updateComment({
-        repo: github.context.repo.repo,
-        owner: github.context.repo.owner,
-        comment_id: commentId,
-        body,
-      })
-
       if (updateComment == "true") {
         const issueComments = await octokit.issues.listComments({
           repo: github.context.repo.repo,
@@ -63,7 +55,12 @@ async function run() {
 
         if (existingComment) {
           console.log('Update Comment ID: ' + existingComment.id);
-          await updateGitHubComment(existingComment.id);
+          await octokit.issues.updateComment({
+            owner: github.context.repo.owner,
+            repo: github.context.repo.repo,
+            commentId: existingComment.id,
+            body,
+          });
           return
         }
         console.log('Comment does not exist, create a new one');
