@@ -56,8 +56,8 @@ async function run() {
         if (existingComment) {
           console.log('Update Comment ID: ' + existingComment.id);
           await octokit.issues.updateComment({
-            owner: github.context.repo.owner,
             repo: github.context.repo.repo,
+            owner: github.context.repo.owner,
             commentId: existingComment.id,
             body,
           });
