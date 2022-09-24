@@ -58,7 +58,7 @@ async function run() {
           repo: github.context.repo.repo,
           owner: github.context.repo.owner,
           commentId: existingComment.id,
-          body,
+          body: body,
         });
         console.log('Comment updated');
       }
