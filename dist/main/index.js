@@ -17300,36 +17300,33 @@ async function run() {
         body += `\n:no_entry: ${errorMessage}`;
       }
 
-      if (updateComment == "true") {
+      const existingComment = issueComments.data.find(comment =>
+        comment.body.includes(commentIdentifier(process.env.GITHUB_WORKFLOW)),
+      )
+
+      if (updateComment == "true" && existingComment) {
         const issueComments = await octokit.issues.listComments({
           repo: github.context.repo.repo,
           owner: github.context.repo.owner,
           issue_number: github.context.payload.pull_request.number,
         })
-
-        const existingComment = issueComments.data.find(comment =>
-          comment.body.includes(commentIdentifier(process.env.GITHUB_WORKFLOW)),
-        )
-
-        if (existingComment) {
-          console.log('Update Comment ID: ' + existingComment.id);
-          await octokit.issues.updateComment({
-            repo: github.context.repo.repo,
-            owner: github.context.repo.owner,
-            commentId: existingComment.id,
-            body,
-          });
-          return
-        }
-        console.log('Comment does not exist, create a new one');
+        console.log('Update Comment ID: ' + existingComment.id);
+        await octokit.issues.updateComment({
+          repo: github.context.repo.repo,
+          owner: github.context.repo.owner,
+          commentId: existingComment.id,
+          body,
+        });
+        console.log('Comment updated');
       }
-
-      await octokit.issues.createComment({
-        owner: github.context.repo.owner,
-        repo: github.context.repo.repo,
-        issue_number: github.context.payload.pull_request.number,
-        body: body,
-      });
+      else {
+        await octokit.issues.createComment({
+          owner: github.context.repo.owner,
+          repo: github.context.repo.repo,
+          issue_number: github.context.payload.pull_request.number,
+          body: body,
+        });
+      }
     }
 
     if (isFailure) {
