@@ -44,8 +44,8 @@ async function run() {
 
       if (updateComment == "true") {
         const issueComments = await octokit.issues.listComments({
-          repo: github.context.repo.repo,
           owner: github.context.repo.owner,
+          repo: github.context.repo.repo,
           issue_number: github.context.payload.pull_request.number,
         })
 
@@ -55,8 +55,8 @@ async function run() {
   
         console.log('Update Comment ID: ' + existingComment.id);
         await octokit.issues.updateComment({
-          repo: github.context.repo.repo,
           owner: github.context.repo.owner,
+          repo: github.context.repo.repo,
           commentId: existingComment.id,
           body: body,
         });
