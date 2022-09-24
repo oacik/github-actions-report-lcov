@@ -17312,13 +17312,7 @@ async function run() {
         )
 
         console.log('Update Comment ID: ' + existingComment.id);
-        // await octokit.issues.updateComment({
-        //   owner: github.context.repo.owner,
-        //   repo: github.context.repo.repo,
-        //   commentId: existingComment.id,
-        //   body: body,
-        // });
-        await octokit.request('PATCH /repos/${github.context.repo.owner}/${github.context.repo.repo}/issues/comments/${existingComment.id}', {
+        await octokit.issues.updateComment({
           owner: github.context.repo.owner,
           repo: github.context.repo.repo,
           commentId: existingComment.id,
