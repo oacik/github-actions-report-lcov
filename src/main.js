@@ -42,16 +42,17 @@ async function run() {
         body += `\n:no_entry: ${errorMessage}`;
       }
 
-      const existingComment = issueComments.data.find(comment =>
-        comment.body.includes(commentIdentifier(process.env.GITHUB_WORKFLOW)),
-      )
-
-      if (updateComment == "true" && existingComment) {
+      if (updateComment == "true") {
         const issueComments = await octokit.issues.listComments({
           repo: github.context.repo.repo,
           owner: github.context.repo.owner,
           issue_number: github.context.payload.pull_request.number,
         })
+
+        const existingComment = issueComments.data.find(comment =>
+          comment.body.includes(commentIdentifier(process.env.GITHUB_WORKFLOW)),
+        )
+  
         console.log('Update Comment ID: ' + existingComment.id);
         await octokit.issues.updateComment({
           repo: github.context.repo.repo,
